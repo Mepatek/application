@@ -63,6 +63,11 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 			}
 			if ($orderString) {
 				$selection->order($orderString);
+			} else {
+				// is MS SQL? need order for OFFSET
+				if ($selection->connection->supplementalDriver instanceof Nette\Database\Drivers\SqlsrvDriver) {
+					$selection->order($selection->getPrimary());
+				}
 			}
 		}
 		// compose Limit

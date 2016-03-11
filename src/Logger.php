@@ -1,6 +1,6 @@
 <?php
 
-namespace Mepatek\Logger;
+namespace Mepatek;
 
 use Psr\Log\AbstractLogger,
 	Nette\Database\Context,

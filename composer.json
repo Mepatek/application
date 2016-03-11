@@ -1,0 +1,22 @@
+{
+  "name": "mepatek/application",
+  "description": "Mepatek Application",
+  "license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+  "authors": [
+    {
+      "name": "Josef Dohnal",
+      "homepage": "http://www.mepatek.cz/"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.1",
+    "nette/utils": "^2.3",
+    "nette/database": "^2.3"
+  },
+  "require-dev": {
+    "nette/tester": "~1.7"
+  },
+  "autoload": {
+    "classmap": ["src/"]
+  }
+}

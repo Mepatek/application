@@ -3,6 +3,7 @@
 namespace Mepatek\Mapper;
 
 use Nette,
+	Nette\Database\Context,
 	Nette\Database\IRow,
 	Nette\Database\Table\Selection;
 
@@ -12,6 +13,9 @@ use Nette,
  */
 class AbstractNetteDatabaseMapper extends AbstractMapper
 {
+	/** @var Context */
+	protected $database;
+
 	/**
 	 * Find entities by $values (key=>value)
 	 *
@@ -64,10 +68,6 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 			if ($orderString) {
 				$selection->order($orderString);
 			} else {
-				// is MS SQL? need order for OFFSET
-				if ($selection->connection->supplementalDriver instanceof Nette\Database\Drivers\SqlsrvDriver) {
-					$selection->order($selection->getPrimary());
-				}
 			}
 		}
 		// compose Limit
@@ -76,6 +76,14 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 				$selection->limit((int)$limit, (int)$offset);
 			} else {
 				$selection->limit((int)$limit);
+			}
+		}
+		if ($limit !== null and $order === null) {
+			// is MS SQL? need order for OFFSET
+			if ($this->database->getConnection()->supplementalDriver
+				instanceof Nette\Database\Drivers\SqlsrvDriver
+			) {
+				$selection->order($selection->getPrimary());
 			}
 		}
 

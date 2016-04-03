@@ -61,7 +61,7 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 			foreach ($order as $column => $ascdesc) {
 				// translate properties to SQL column name
 				$columnTranslate = $this->translatePropertyToColumnSQL($column);
-				$orderString = ($orderString ? "," : "") . $columnTranslate . (strtolower(
+				$orderString .= ($orderString ? "," : "") . $columnTranslate . (strtolower(
 						$ascdesc
 					) == "desc" ? " DESC" : "");
 			}
@@ -78,7 +78,7 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 				$selection->limit((int)$limit);
 			}
 		}
-		if ($limit !== null and $order === null) {
+		if ($limit !== null and !$order) {
 			// is MS SQL? need order for OFFSET
 			if ($this->database->getConnection()->supplementalDriver
 				instanceof Nette\Database\Drivers\SqlsrvDriver

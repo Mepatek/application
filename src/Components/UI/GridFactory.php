@@ -4,6 +4,7 @@ namespace Mepatek\Components\UI;
 
 use Grido,
 	Grido\Grid,
+	Mepatek\Components\Grido\DataSources\RepositorySource,
 	Mepatek\Repository\IRepository,
 	Nette\Database\Table\Selection;
 
@@ -29,12 +30,15 @@ class GridFactory
 		// set data model
 		if ($data) {
 			if ($data instanceof IRepository) {
-				$dataModel = new Mepatek\Components\Grido\DataSources\RepositorySource($data);
+				$dataModel = new RepositorySource($data);
 			} elseif ($data instanceof Selection) {
 				$dataModel = new Grido\DataSources\NetteDatabase($data);
 			} else {
 				$dataModel = new Grido\DataSources\ArraySource($data);
 			}
+			$grid->setModel($dataModel);
+		} else {
+			$dataModel = new Grido\DataSources\ArraySource([]);
 			$grid->setModel($dataModel);
 		}
 		// set primary key

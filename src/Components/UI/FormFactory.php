@@ -25,7 +25,7 @@ class FormFactory
 	/**
     * Create form UI component
     * 
-    * @return \App\Components\Form
+    * @return Form
     */
     public function create()
     {
@@ -37,7 +37,8 @@ class FormFactory
 	 * Create form bootstrap UI component
 	 *
 	 * @param string $type null=standard, inline = inline form, vertical = vertical form
-	 * @return \App\Components\FormBootstrap
+	 *
+	 * @return FormBootstrap
 	 */
 	public function createBootstrap($type=null)
 	{

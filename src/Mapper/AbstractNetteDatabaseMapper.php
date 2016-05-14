@@ -53,7 +53,12 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 		foreach ($values as $key => $value) {
 			// translate property name to SQL column name
 			$keyTranslate = $this->translatePropertyToColumnSQL($key);
-			$selection->where($keyTranslate, $value);
+			if (is_array($value)) {
+				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
+				call_user_func_array(array($selection, "where"), $value);
+			} else {
+				$selection->where($keyTranslate, $value);
+			}
 		}
 		// compose Order
 		if ($order !== null) {

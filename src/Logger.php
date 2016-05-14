@@ -39,21 +39,21 @@ class Logger extends AbstractLogger
 	 */
 	public function log($level, $message, array $context = [])
 	{
-		$logdatetime = new \DateTime();
-		$UzivatelID = $this->getAndRemoveContextValue($context, "UzivatelID", $this->user->id);
+		$logDateTime = new \DateTime();
+		$userId = $this->getAndRemoveContextValue($context, "UzivatelID", $this->user->id);
 		$presenter = $this->getAndRemoveContextValue($context, "presenter");
 		$function = $this->getAndRemoveContextValue($context, "function");
 		$ip = $this->httpRequest->getRemoteAddress();
 		$message = $this->interpolate($message, $context);
 
-		$this->database->table("SYS_Log")->insert(
+		$this->database->table("syslog")->insert(
 			[
-				"UzivatelID"  => $UzivatelID,
+				"userId"      => $userId,
 				"ip"          => $ip,
 				"presenter"   => $presenter,
 				"function"    => $function,
 				"level"       => $level,
-				"logdatetime" => $logdatetime,
+				"logDateTime" => $logDateTime,
 				"message"     => $message,
 			]
 		);

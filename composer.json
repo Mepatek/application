@@ -19,7 +19,8 @@
     "nette/forms": "^2.3",
     "nette/application": "^2.3",
     "latte/latte": "^2.3",
-    "o5/grido": "dev-master"
+    "o5/grido": "dev-master",
+    "ublaboo/datagrid": "^4.0"
   },
   "require-dev": {
     "nette/tester": "~1.7"

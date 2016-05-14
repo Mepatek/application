@@ -10,6 +10,7 @@ use Nette,
 	Mepatek,
 	Mepatek\Repository\IRepository,
 	Nette\Database\Table\Selection;
+use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataSource\ArrayDataSource;
 use Ublaboo\DataGrid\DataSource\NetteDatabaseTableDataSource;
 
@@ -28,7 +29,7 @@ class GridFactory
 	 *
 	 * @param ITranslator $translator
 	 */
-	public function __construct(ITranslator $translator = null, $defaultGrid = "Grido")
+	public function __construct(ITranslator $translator, $defaultGrid = "Grido")
 	{
 		$this->translator = $translator;
 		$this->defaultGrid = $defaultGrid;

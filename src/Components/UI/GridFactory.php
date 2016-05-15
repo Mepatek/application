@@ -54,7 +54,7 @@ class GridFactory
 				return $this->createGrido($data, $primaryKey, $perPage);
 				break;
 			case "Ublaboo":
-				return $this->createUblaboo($parent, $name, $data, $primaryKey, $perPage);
+				return $this->createUblaboo($data, $primaryKey, $perPage, $parent, $name);
 				break;
 		}
 	}

@@ -42,19 +42,20 @@ class GridFactory
 	 * @param array|IRepository|Selection          $data
 	 * @param string                               $primaryKey
 	 * @param integer                              $perPage
+	 * @param array                              $defaultFilter
 	 * @param Nette\ComponentModel\IContainer|null $parent
 	 * @param null|string                          $name
 	 *
 	 * @return Grid|DataGrid
 	 */
-	public function create($data = null, $primaryKey = null, $perPage = null, $parent = null, $name = null)
+	public function create($data = null, $primaryKey = null, $perPage = null, $defaultFilter=[], $parent = null, $name = null)
 	{
 		switch ($this->defaultGrid) {
 			case "Grido":
-				return $this->createGrido($data, $primaryKey, $perPage);
+				return $this->createGrido($data, $primaryKey, $perPage, $defaultFilter);
 				break;
 			case "Ublaboo":
-				return $this->createUblaboo($data, $primaryKey, $perPage, $parent, $name);
+				return $this->createUblaboo($data, $primaryKey, $perPage, $defaultFilter, $parent, $name);
 				break;
 		}
 	}
@@ -65,10 +66,11 @@ class GridFactory
 	 * @param array|IRepository|Selection $data
 	 * @param string                      $primaryKey
 	 * @param integer                     $perPage
+	 * @param array                              $defaultFilter
 	 *
 	 * @return Grid
 	 */
-	public function createGrido($data = null, $primaryKey = null, $perPage = null)
+	public function createGrido($data = null, $primaryKey = null, $perPage = null, $defaultFilter = [])
 	{
 		$grid = new Grid();
 
@@ -76,6 +78,7 @@ class GridFactory
 		if ($data) {
 			if ($data instanceof IRepository) {
 				$dataModel = new Mepatek\Components\Grido\DataSources\RepositorySource($data);
+				$dataModel->defaultFilter = $defaultFilter;
 			} elseif ($data instanceof Selection) {
 				$dataModel = new Grido\DataSources\NetteDatabase($data);
 			} else {
@@ -113,13 +116,14 @@ class GridFactory
 	 * @param array|IRepository|Selection          $data
 	 * @param string                               $primaryKey
 	 * @param integer                              $perPage
+	 * @param array                              $defaultFilter
 	 * @param Nette\ComponentModel\IContainer|null $parent
 	 * @param string|null                          $name
 	 *
 	 * @return DataGrid
 	 * @throws DataGridException
 	 */
-	public function createUblaboo($data = null, $primaryKey = null, $perPage = null, $parent = null, $name = null)
+	public function createUblaboo($data = null, $primaryKey = null, $perPage = null, $defaultFilter = [], $parent = null, $name = null)
 	{
 		$grid = new DataGrid($parent, $name);
 
@@ -132,6 +136,7 @@ class GridFactory
 		if ($data) {
 			if ($data instanceof IRepository) {
 				$dataSource = new Mepatek\Components\Ublaboo\DataSources\RepositorySource($data, $primaryKey);
+				$dataSource->defaultFilter = $defaultFilter;
 			} elseif ($data instanceof Selection) {
 				$dataSource = new NetteDatabaseTableDataSource($data);
 			} else {

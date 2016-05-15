@@ -29,6 +29,8 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
 	protected $filterValues=array();
 	/** @var array */
 	protected $order=array();
+	/** @var array */
+	public $defaultFilter=[];
 
     /**
      * @param IRepository $repository
@@ -100,7 +102,7 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
      */
     public function getCount()
     {
-        return $this->repository->countBy($this->filterValues);
+        return $this->repository->countBy($this->getFullFilter());
     }
 
     /**
@@ -108,8 +110,14 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
      */
     public function getData()
     {
-		return $this->repository->findBy($this->filterValues, $this->order, $this->limit, $this->offset);
+		return $this->repository->findBy($this->getFullFilter(), $this->order, $this->limit, $this->offset);
     }
+
+	protected function getFullFilter()
+	{
+		$filter = array_merge($this->filterValues, $this->defaultFilter);
+		return $filter;
+	}
 
     /**
      * @param array $conditions

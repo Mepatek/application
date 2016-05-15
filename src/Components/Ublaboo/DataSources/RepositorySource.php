@@ -31,6 +31,8 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 	protected $limit=null;
 	/** @var null|int */
 	protected $offset=null;
+	/** @var array */
+	public $defaultFilter=[];
 
 	/**
 	 * @var array
@@ -65,7 +67,7 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 	 */
 	public function getCount()
 	{
-		return $this->repository->countBy($this->filter);
+		return $this->repository->countBy($this->getFullFilter());
 	}
 
 
@@ -75,9 +77,14 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		return $this->repository->findBy($this->filter,$this->order,$this->limit, $this->offset);
+		return $this->repository->findBy($this->getFullFilter(),$this->order,$this->limit, $this->offset);
 	}
 
+	protected function getFullFilter()
+	{
+		$filter = array_merge($this->filter, $this->defaultFilter);
+		return $filter;
+	}
 
 	/**
 	 * Filter data - get one row

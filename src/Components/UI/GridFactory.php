@@ -47,7 +47,7 @@ class GridFactory
 	 *
 	 * @return Grid|DataGrid
 	 */
-	public function create($data = null, $primaryKey = null, $perPage = null, Nette\ComponentModel\IContainer $parent = null, $name = null)
+	public function create($data = null, $primaryKey = null, $perPage = null, $parent = null, $name = null)
 	{
 		switch ($this->defaultGrid) {
 			case "Grido":
@@ -119,7 +119,7 @@ class GridFactory
 	 * @return DataGrid
 	 * @throws DataGridException
 	 */
-	public function createUblaboo($data = null, $primaryKey = null, $perPage = null, Nette\ComponentModel\IContainer $parent = null, $name = null)
+	public function createUblaboo($data = null, $primaryKey = null, $perPage = null, $parent = null, $name = null)
 	{
 		$grid = new DataGrid($parent, $name);
 

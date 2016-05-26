@@ -27,10 +27,16 @@ class DateFormControl extends TextInput
 	public function getControl()
 	{
 		$input = parent::getControl();
-		$input->addAttributes(['class' => 'date-picker']);
+		if (!is_array($input->class)) {
+			if ($input->class) {
+				$input->class[] = $input->class;
+			} else {
+				$input->class = [];
+			}
+		}
+		$input->class[] = 'date-picker';
 		return $input;
 	}
-
 
 	/**
 	 * Returns control's value.
@@ -60,31 +66,6 @@ class DateFormControl extends TextInput
 			$value = $value->format("d.m.Y");
 		}
 		parent::setValue($value);
-		return $this;
-
-		if ($value instanceof \DateTime) {
-			$this->value = $value;
-			$this->submitedValue = null;
-		} elseif ($value instanceof \DateInterval) {
-			$this->value = \DateTime::createFromFormat(self::$formats[self::TYPE_TIME], $value->format("%H:%I:%S"));
-			$this->submitedValue = null;
-		} elseif (is_string($value)) {
-			if ($value === '') {
-				$this->value = null;
-				$this->submitedValue = null;
-			} else {
-				$this->value = $this->parseValue($value);
-				if ($this->value !== false) {
-					$this->submitedValue = null;
-				} else {
-					$this->value = null;
-					$this->submitedValue = $value;
-				}
-			}
-		} else {
-			$this->submitedValue = $value;
-			throw new \InvalidArgumentException("Invalid type for \$value.");
-		}
 		return $this;
 	}
 }

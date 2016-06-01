@@ -15,6 +15,8 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 {
 	/** @var Context */
 	protected $database;
+	/** @var array */
+	protected $permanentlyFilter = [];
 
 	/**
 	 * Find entities by $values (key=>value)
@@ -37,6 +39,26 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 	}
 
 	/**
+	 * Set Permanently filter for all functions includes find!
+	 *
+	 * @param array $values
+	 */
+	public function setPermanentlyFilter(array $values = [])
+	{
+		$this->permanentlyFilter = $values;
+	}
+
+	/**
+	 * Get Permanently filter
+	 *
+	 * @return array
+	 */
+	public function getPermanentlyFilter()
+	{
+		return $this->permanentlyFilter;
+	}
+
+	/**
 	 * Helper for findBy, countBy
 	 *
 	 * @param array   $values
@@ -55,7 +77,18 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 			$keyTranslate = $this->translatePropertyToColumnSQL($key);
 			if (is_int($key) and is_array($value)) {
 				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
-				call_user_func_array(array($selection, "where"), $value);
+				call_user_func_array([$selection, "where"], $value);
+			} else {
+				$selection->where($keyTranslate, $value);
+			}
+		}
+		// compose permanently filter
+		foreach ($this->getPermanentlyFilter() as $key => $value) {
+			// translate property name to SQL column name
+			$keyTranslate = $this->translatePropertyToColumnSQL($key);
+			if (is_int($key) and is_array($value)) {
+				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
+				call_user_func_array([$selection, "where"], $value);
 			} else {
 				$selection->where($keyTranslate, $value);
 			}

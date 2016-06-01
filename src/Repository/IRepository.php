@@ -39,4 +39,17 @@ interface IRepository
 	 */
 	public function countBy(array $values);
 
+	/**
+	 * Set Permanently filter for all functions includes find!
+	 *
+	 * @param array $values
+	 */
+	public function setPermanentlyFilter(array $values = []);
+
+	/**
+	 * Get Permanently filter
+	 * 
+	 * @return array
+	 */
+	public function getPermanentlyFilter();
 }

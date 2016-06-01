@@ -53,5 +53,24 @@ abstract class AbstractRepository extends Object implements IRepository
 		return $this->mapper->countBy($values);
 	}
 
+	/**
+	 * Set Permanently filter for all functions includes find!
+	 *
+	 * @param array $values
+	 */
+	public function setPermanentlyFilter(array $values = [])
+	{
+		return $this->mapper->setPermanentlyFilter($values);
+	}
+
+	/**
+	 * Get Permanently filter
+	 *
+	 * @return array
+	 */
+	public function getPermanentlyFilter()
+	{
+		return $this->mapper->getPermanentlyFilter();
+	}
 
 }

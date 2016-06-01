@@ -42,20 +42,20 @@ class GridFactory
 	 * @param array|IRepository|Selection          $data
 	 * @param string                               $primaryKey
 	 * @param integer                              $perPage
-	 * @param array                              $defaultFilter
+	 * @param array                                $permanentlyFilter
 	 * @param Nette\ComponentModel\IContainer|null $parent
 	 * @param null|string                          $name
 	 *
 	 * @return Grid|DataGrid
 	 */
-	public function create($data = null, $primaryKey = null, $perPage = null, $defaultFilter=[], $parent = null, $name = null)
+	public function create($data = null, $primaryKey = null, $perPage = null, $permanentlyFilter = [], $parent = null, $name = null)
 	{
 		switch ($this->defaultGrid) {
 			case "Grido":
-				return $this->createGrido($data, $primaryKey, $perPage, $defaultFilter);
+				return $this->createGrido($data, $primaryKey, $perPage, $permanentlyFilter);
 				break;
 			case "Ublaboo":
-				return $this->createUblaboo($data, $primaryKey, $perPage, $defaultFilter, $parent, $name);
+				return $this->createUblaboo($data, $primaryKey, $perPage, $permanentlyFilter, $parent, $name);
 				break;
 		}
 	}
@@ -66,11 +66,11 @@ class GridFactory
 	 * @param array|IRepository|Selection $data
 	 * @param string                      $primaryKey
 	 * @param integer                     $perPage
-	 * @param array                              $defaultFilter
+	 * @param array                       $permanentlyFilter
 	 *
 	 * @return Grid
 	 */
-	public function createGrido($data = null, $primaryKey = null, $perPage = null, $defaultFilter = [])
+	public function createGrido($data = null, $primaryKey = null, $perPage = null, $permanentlyFilter = [])
 	{
 		$grid = new Grid();
 
@@ -78,7 +78,7 @@ class GridFactory
 		if ($data) {
 			if ($data instanceof IRepository) {
 				$dataModel = new Mepatek\Components\Grido\DataSources\RepositorySource($data);
-				$dataModel->defaultFilter = $defaultFilter;
+				$dataModel->setPermanentlyFilter($permanentlyFilter);
 			} elseif ($data instanceof Selection) {
 				$dataModel = new Grido\DataSources\NetteDatabase($data);
 			} else {
@@ -116,14 +116,14 @@ class GridFactory
 	 * @param array|IRepository|Selection          $data
 	 * @param string                               $primaryKey
 	 * @param integer                              $perPage
-	 * @param array                              $defaultFilter
+	 * @param array                                $permanentlyFilter
 	 * @param Nette\ComponentModel\IContainer|null $parent
 	 * @param string|null                          $name
 	 *
 	 * @return DataGrid
 	 * @throws DataGridException
 	 */
-	public function createUblaboo($data = null, $primaryKey = null, $perPage = null, $defaultFilter = [], $parent = null, $name = null)
+	public function createUblaboo($data = null, $primaryKey = null, $perPage = null, $permanentlyFilter = [], $parent = null, $name = null)
 	{
 		$grid = new DataGrid($parent, $name);
 
@@ -136,7 +136,7 @@ class GridFactory
 		if ($data) {
 			if ($data instanceof IRepository) {
 				$dataSource = new Mepatek\Components\Ublaboo\DataSources\RepositorySource($data, $primaryKey);
-				$dataSource->defaultFilter = $defaultFilter;
+				$dataSource->setPermanentlyFilter($permanentlyFilter);
 			} elseif ($data instanceof Selection) {
 				$dataSource = new NetteDatabaseTableDataSource($data);
 			} else {

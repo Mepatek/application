@@ -24,15 +24,13 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 	/** @var IRepository */
 	protected $repository;
 	/** @var array */
-	protected $filter=[];
+	protected $filter = [];
 	/** @var array */
-	protected $order=[];
+	protected $order = [];
 	/** @var null|int */
-	protected $limit=null;
+	protected $limit = null;
 	/** @var null|int */
-	protected $offset=null;
-	/** @var array */
-	public $defaultFilter=[];
+	protected $offset = null;
 
 	/**
 	 * @var array
@@ -55,6 +53,25 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 		$this->primary_key = $primary_key;
 	}
 
+	/**
+	 * Set permanently filter
+	 *
+	 * @param array $values
+	 */
+	public function setPermanentlyFilter(array $values)
+	{
+		$this->repository->setPermanentlyFilter($values);
+	}
+
+	/**
+	 * Get permanently filter
+	 *
+	 * @return array
+	 */
+	public function getPermanentlyFilter()
+	{
+		return $this->repository->getPermanentlyFilter();
+	}
 
 	/********************************************************************************
 	 *                          IDataSource implementation                          *
@@ -77,12 +94,12 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 	 */
 	public function getData()
 	{
-		return $this->repository->findBy($this->getFullFilter(),$this->order,$this->limit, $this->offset);
+		return $this->repository->findBy($this->getFullFilter(), $this->order, $this->limit, $this->offset);
 	}
 
 	protected function getFullFilter()
 	{
-		$filter = array_merge($this->filter, $this->defaultFilter);
+		$filter = $this->filter;
 		return $filter;
 	}
 

@@ -29,8 +29,6 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
 	protected $filterValues=array();
 	/** @var array */
 	protected $order=array();
-	/** @var array */
-	public $defaultFilter=[];
 
     /**
      * @param IRepository $repository
@@ -39,6 +37,28 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
     {
         $this->repository = $repository;
     }
+
+
+	/**
+	 * Set permanently filter
+	 *
+	 * @param array $values
+	 */
+	public function setPermanentlyFilter(array $values)
+	{
+		$this->repository->setPermanentlyFilter($values);
+	}
+
+	/**
+	 * Get permanently filter
+	 *
+	 * @return array
+	 */
+	public function getPermanentlyFilter()
+	{
+		return $this->repository->getPermanentlyFilter();
+	}
+
 
 	/**
 	 * @param Condition $condition
@@ -115,7 +135,7 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
 
 	protected function getFullFilter()
 	{
-		$filter = array_merge($this->filterValues, $this->defaultFilter);
+		$filter = $this->filterValues;
 		return $filter;
 	}
 

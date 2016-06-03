@@ -2,8 +2,10 @@
 
 namespace Mepatek\Components;
 
+use Mepatek\Components\Controls\DateTimeFormControl;
 use Nette\Localization\ITranslator,
 	Mepatek\Components\Controls\DateFormControl;
+use Nette\Utils\DateTime;
 
 /**
  * Class Form
@@ -62,6 +64,21 @@ class Form extends \Nette\Application\UI\Form
 	public function addDate($name, $label = null)
 	{
 		$control = new DateFormControl($label);
+		$this->addComponent($control, $name);
+		return $control;
+	}
+
+	/**
+	 * Add input type=DATETIME
+	 *
+	 * @param string $name
+	 * @param string $label
+	 *
+	 * @return \Nette\Forms\Controls\BaseControl
+	 */
+	public function addDateTime($name, $label = null)
+	{
+		$control = new DateTimeFormControl($label);
 		$this->addComponent($control, $name);
 		return $control;
 	}

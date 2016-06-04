@@ -144,7 +144,7 @@ class GridFactory
 			}
 			$grid->setDataSource($dataSource);
 		} else {
-			$dataSource = new Grido\DataSources\ArrayDataSource([]);
+			$dataSource = new ArrayDataSource([]);
 			$grid->setDataSource($dataSource);
 		}
 

@@ -16,7 +16,7 @@ class DateTimeFormControl extends TextInput
 	 */
 	public function __construct($label = null)
 	{
-		parent::__construct($label, 16);
+		parent::__construct($label, 19);
 		$this->control->type = 'datetime';
 	}
 
@@ -49,6 +49,11 @@ class DateTimeFormControl extends TextInput
 		if ($value && is_string($value)) {
 			$format = "d.m.Y H:i:s";
 			$value = DateTime::createFromFormat($format, $value);
+			if (!$value) {
+				$format = "d.m.Y H:i";
+				$value = parent::getValue();
+				$value = DateTime::createFromFormat($format, $value);
+			}
 		}
 		return $value ? $value : NULL;
 	}

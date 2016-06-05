@@ -17,7 +17,7 @@ class DateTimeFormControl extends TextInput
 	public function __construct($label = null)
 	{
 		parent::__construct($label, 19);
-		$this->control->type = 'datetime';
+		//$this->control->type = 'datetime';
 	}
 
 	/**

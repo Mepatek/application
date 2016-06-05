@@ -46,7 +46,8 @@ class RepositorySource extends \Nette\Object implements DataSources\IDataSource
 	 */
 	public function setPermanentlyFilter(array $values)
 	{
-		$this->repository->setPermanentlyFilter($values);
+		$existingPermanetlyFilter = $this->repository->getPermanentlyFilter();
+		$this->repository->setPermanentlyFilter(array_merge($values, $existingPermanetlyFilter));
 	}
 
 	/**

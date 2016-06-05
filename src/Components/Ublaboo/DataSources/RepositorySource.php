@@ -54,13 +54,14 @@ class RepositorySource extends FilterableDataSource implements IDataSource
 	}
 
 	/**
-	 * Set permanently filter
+	 * Add permanently filter
 	 *
 	 * @param array $values
 	 */
 	public function setPermanentlyFilter(array $values)
 	{
-		$this->repository->setPermanentlyFilter($values);
+		$existingPermanetlyFilter = $this->repository->getPermanentlyFilter();
+		$this->repository->setPermanentlyFilter(array_merge($values, $existingPermanetlyFilter));
 	}
 
 	/**

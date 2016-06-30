@@ -9,19 +9,21 @@
     }
   ],
   "require": {
-    "php": ">=5.5.1",
+    "php": ">=5.6.1",
     "nette/utils": "^2.3",
     "nette/database": "^2.3",
     "psr/log": "^1.0",
     "nette/security": "^2.3",
     "nette/http": "^2.3",
     "tomaj/nette-bootstrap-form": "^1.2",
-    "nette/forms": "^2.3",
+    "nette/forms": "^2.4",
     "nette/application": "^2.3",
     "latte/latte": "^2.3",
     "o5/grido": "dev-master",
     "ublaboo/datagrid": "^4.0"
   },
+  "minimum-stability": "RC",
+  
   "require-dev": {
     "nette/tester": "~1.7"
   },

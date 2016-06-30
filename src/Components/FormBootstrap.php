@@ -32,7 +32,7 @@ class FormBootstrap extends Form
 	/**
 	 * Render bootstrap form
 	 */
-	public function render()
+	public function render(...$args)
 	{
 		switch ($this->type) {
 			case "inline":
@@ -48,7 +48,7 @@ class FormBootstrap extends Form
 		$renderer->wrappers["label"]["container"] = 'div class="col-sm-2 control-label"';
 		$this->setRenderer($renderer);
 
-		parent::render();
+		parent::render(...$args);
 	}
 
 }

@@ -29,7 +29,7 @@ class FormFactory
     */
     public function create()
     {
-        $form = new Form();
+        $form = new Form($this->translator);
 		return $form;
    }
 

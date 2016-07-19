@@ -138,7 +138,7 @@ class GridFactory
 				$dataSource = new Mepatek\Components\Ublaboo\DataSources\RepositorySource($data, $primaryKey);
 				$dataSource->setPermanentlyFilter($permanentlyFilter);
 			} elseif ($data instanceof Selection) {
-				$dataSource = new NetteDatabaseTableDataSource($data);
+				$dataSource = new NetteDatabaseTableDataSource($data, $primaryKey);
 			} else {
 				$dataSource = new ArrayDataSource($data);
 			}

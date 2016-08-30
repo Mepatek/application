@@ -1,7 +1,11 @@
 {
   "name": "mepatek/application",
   "description": "Mepatek Application",
-  "license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+  "license": [
+    "BSD-3-Clause",
+    "GPL-2.0",
+    "GPL-3.0"
+  ],
   "authors": [
     {
       "name": "Josef Dohnal",
@@ -10,24 +14,26 @@
   ],
   "require": {
     "php": ">=5.6.1",
-    "nette/utils": "^2.3",
-    "nette/database": "^2.3",
+    "nette/utils": "^2.4",
+    "nette/database": "^2.4",
     "psr/log": "^1.0",
-    "nette/security": "^2.3",
-    "nette/http": "^2.3",
+    "nette/security": "^2.4",
+    "nette/http": "^2.4",
     "tomaj/nette-bootstrap-form": "^1.2",
     "nette/forms": "^2.4",
-    "nette/application": "^2.3",
-    "latte/latte": "^2.3",
-    "o5/grido": "dev-master",
-    "ublaboo/datagrid": "^4.0"
+    "nette/application": "^2.4",
+    "latte/latte": "^2.4"
   },
-  "minimum-stability": "RC",
-  
+  "suggest": {
+    "o5/grido": "^2.1",
+    "ublaboo/datagrid": "^4.4"
+  },
   "require-dev": {
     "nette/tester": "~1.7"
   },
   "autoload": {
-    "classmap": ["src/"]
+    "classmap": [
+      "src/"
+    ]
   }
 }

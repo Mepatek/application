@@ -29,7 +29,7 @@ class GridFactory
 	 *
 	 * @param ITranslator $translator
 	 */
-	public function __construct(ITranslator $translator, $defaultGrid = "Grido")
+	public function __construct($translator, $defaultGrid = "Grido")
 	{
 		$this->translator = $translator;
 		$this->defaultGrid = $defaultGrid;

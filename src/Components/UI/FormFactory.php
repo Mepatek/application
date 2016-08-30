@@ -17,7 +17,7 @@ class FormFactory
 	 *
 	 * @param ITranslator $translator
 	 */
-	public function __construct(ITranslator $translator)
+	public function __construct($translator)
 	{
 		$this->translator = $translator;
 	}

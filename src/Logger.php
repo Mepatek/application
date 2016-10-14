@@ -10,6 +10,8 @@ use Psr\Log\AbstractLogger,
 /**
  * Class Logger
  * @package Mepatek\Logger
+ *
+ * @deprecated
  */
 class Logger extends AbstractLogger
 {
@@ -21,6 +23,13 @@ class Logger extends AbstractLogger
 	/** @var IRequest */
 	private $httpRequest;
 
+	/**
+	 * Logger constructor.
+	 *
+	 * @param Context  $database
+	 * @param User     $user
+	 * @param IRequest $httpRequest
+	 */
 	public function __construct(Context $database, User $user, IRequest $httpRequest)
 	{
 		$this->database = $database;

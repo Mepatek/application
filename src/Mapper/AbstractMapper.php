@@ -4,7 +4,7 @@ namespace Mepatek\Mapper;
 
 use Nette,
 	Nette\Object,
-	Mepatek\Logger;
+	Psr\Log\LoggerInterface;
 
 /**
  * Class AbstractMapper
@@ -12,7 +12,7 @@ use Nette,
  */
 class AbstractMapper extends Object
 {
-	/** @var Logger */
+	/** @var LoggerInterface */
 	protected $logger;
 
 	/**

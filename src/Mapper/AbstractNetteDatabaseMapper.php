@@ -77,6 +77,7 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 			$keyTranslate = $this->translatePropertyToColumnSQL($key);
 			if (is_int($key) and is_array($value)) {
 				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
+				$value[0] = $this->translatePropertyToColumnSQL($value[0]);
 				call_user_func_array([$selection, "where"], $value);
 			} else {
 				$selection->where($keyTranslate, $value);
@@ -88,6 +89,7 @@ class AbstractNetteDatabaseMapper extends AbstractMapper
 			$keyTranslate = $this->translatePropertyToColumnSQL($key);
 			if (is_int($key) and is_array($value)) {
 				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
+				$value[0] = $this->translatePropertyToColumnSQL($value[0]);
 				call_user_func_array([$selection, "where"], $value);
 			} else {
 				$selection->where($keyTranslate, $value);

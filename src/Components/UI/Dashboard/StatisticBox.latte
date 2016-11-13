@@ -1,0 +1,20 @@
+<a class="dashboard-stat dashboard-stat-v2 {$control->getColor()}" {var $link=$control->getLink()}{if $link}href="{plink $link}"{/if}>
+	{var $icon = $control->getIcon()}
+	<div n:if="$icon" class="visual">
+		<i class="{$icon}"></i>
+	</div>
+	<div class="details">
+		<div class="number">
+			{var $prefix = $control->getPrefix()}
+			{var $suffix = $control->getSuffix()}
+			{if $prefix}
+				{$prefix}
+			{/if}
+			<span data-counter="counterup" data-value="{$control->getNumber()}">0</span>
+			{if $suffix}
+				{$suffix}
+			{/if}
+		</div>
+		<div class="desc">{$control->getDescription()}</div>
+	</div>
+</a>

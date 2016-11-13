@@ -1,0 +1,42 @@
+{var $link = $control->getLink()}
+{if $link}
+<a href="{plink $link}">
+	{/if}
+	<div class="dashboard-stat2 bordered">
+		<div class="display">
+			<div class="number">
+				<h3 class="font-{$control->getColor()}">
+					{var $prefix = $control->getPrefix()}
+					{var $suffix = $control->getSuffix()}
+					{if $prefix}
+						<small class="font-{$control->getColor()}">{$prefix}</small>
+					{/if}
+					<span data-counter="counterup" data-value="{$control->getNumber()}">0</span>
+					{if $suffix}
+						<small class="font-{$control->getColor()}">{$suffix}</small>
+					{/if}
+
+				</h3>
+				<small>{$control->getDescription()}</small>
+			</div>
+			{var $icon = $control->getIcon()}
+			<div n:if="$icon" class="icon">
+				<i class="{$icon}"></i>
+				{dump $icon}
+			</div>
+		</div>
+		<div class="progress-info">
+			<div class="progress">
+				<span style="width: {$control->getProgressPercent()}%;" class="progress-bar progress-bar-success {$control->getColor()}">
+						<span class="sr-only">{$control->getProgressPercent()}% {$control->getProgressDescription()}</span>
+				</span>
+			</div>
+			<div class="status">
+				<div class="status-title">{$control->getProgressDescription()}</div>
+				<div class="status-number">{$control->getProgressPercent()}%</div>
+			</div>
+		</div>
+	</div>
+	{if $link}
+</a>
+{/if}

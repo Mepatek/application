@@ -1,0 +1,26 @@
+<!-- BEGIN PORTLET-->
+<div class="portlet light bordered">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="{$control->getIcon()} font-dark"></i>
+			<span class="caption-subject font-dark bold uppercase">{$control->getCaption()}</span>
+			<span class="caption-helper">{$control->getCaptionHelper()}</span>
+		</div>
+		<div class="actions">
+			<a n:foreach="$control->getButtons() as $button" href="{$button->url}" class="btn btn-circle {$button->color}">
+				<i n:if="$button->icon" class="{$button->icon}"></i> {$button->caption}
+			</a>
+		</div>
+	</div>
+	<div class="portlet-body">
+		<div class="flot_chart" data-chart-data="{link getData!}" data-chart-color="{$control->getColor()}">
+			<div class="flot_chart_loading">
+				<img src="{$basePath}/assets/global/img/loading.gif" alt="loading"/>
+			</div>
+			<div class="flot_chart_area display-none">
+				<div class="flot_chart_graph chart"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END PORTLET-->

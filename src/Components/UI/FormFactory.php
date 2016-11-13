@@ -17,14 +17,14 @@ class FormFactory
 	 *
 	 * @param ITranslator $translator
 	 */
-	public function __construct($translator)
+	public function __construct(ITranslator $translator)
 	{
 		$this->translator = $translator;
 	}
 
 	/**
     * Create form UI component
-    * 
+    *
     * @return Form
     */
     public function create()

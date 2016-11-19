@@ -9,6 +9,8 @@ class EasyPieChart extends Control
 	/** @var string */
 	protected $class = "";
 	/** @var string */
+	protected $color = "";
+	/** @var string */
 	protected $title = "";
 	/** @var int|float */
 	protected $percent = 0;
@@ -42,6 +44,22 @@ class EasyPieChart extends Control
 	public function setClass($class)
 	{
 		$this->class = $class;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getColor()
+	{
+		return $this->color;
+	}
+
+	/**
+	 * @param string $color
+	 */
+	public function setColor($color)
+	{
+		$this->color = $color;
 	}
 
 	/**

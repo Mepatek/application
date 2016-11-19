@@ -2,7 +2,7 @@
 {var $link = $control->getLink()}
 
 <div class="easy-pie-chart">
-	<div class="number {$control->getClass()}" data-percent="{$control->getPercent()}">
+	<div class="number {$control->getClass()}" data-bar-color="{$control->getColor()}" data-percent="{$control->getPercent()}">
 		<span>{$control->getPercent()}</span>% </div>
 	<a class="title" href="{if $link}{plink $link}{else}javascript:;{/if}"> {$control->getTitle()}
 		<i class="icon-arrow-right"></i>

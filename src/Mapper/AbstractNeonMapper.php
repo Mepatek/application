@@ -19,6 +19,11 @@ use Webpatser\Uuid\Uuid;
  *    id2:
  *        property_1: value_1
  *        property_n: value_n
+ *
+ * Entity must have property id
+ * If id not set, generate Uuid
+ *
+ * Constructor must set neon, storage, neonFile and objectClass
  */
 class AbstractNeonMapper extends AbstractMapper
 {
@@ -135,7 +140,7 @@ class AbstractNeonMapper extends AbstractMapper
 		$this->neonData[$id] = $this->itemToData($item);;
 
 		$this->persist();
-		return $true;
+		return true;
 	}
 
 	/**
@@ -246,17 +251,21 @@ class AbstractNeonMapper extends AbstractMapper
 
 		// compose Order
 		if ($order !== null) {
-			$orderString = "";
-			foreach ($order as $column => $ascdesc) {
-				// translate properties to SQL column name
-				$columnTranslate = $this->translatePropertyToColumnSQL($column);
-				$orderString .= ($orderString ? "," : "") . $columnTranslate . (strtolower(
-						$ascdesc
-					) == "desc" ? " DESC" : "");
+			if (count($order)>1) {
+				throw new \Exception("Only one order column is supported for NEON");
 			}
-			if ($orderString) {
-				$selection->order($orderString);
-			} else {
+			foreach ($order as $property=>$ascdesc) {
+				usort($filteredData, function ($a, $b) use ($property, $ascdesc) {
+					if ($a[$property]==$b[$property]) {
+						return 0;
+					}
+					if ($ascdesc=="DESC") {
+						$sign = -1;
+					} else {
+						$sign = 1;
+					}
+					return $a[$property]<$b[$property] ? (-1 * $sign) : ($sign);
+				});
 			}
 		}
 
@@ -352,7 +361,7 @@ class AbstractNeonMapper extends AbstractMapper
 
 			$saveData[$id] = $value;
 		}
-		$data = $this->neon->encode($this->neonData, Nette\Neon\Encoder::BLOCK);
+		$data = $this->neon->encode($saveData, Nette\Neon\Encoder::BLOCK);
 		file_put_contents($this->neonFile, $data);
 	}
 }

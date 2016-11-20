@@ -5,6 +5,7 @@ namespace Mepatek\Mapper;
 use Nette,
 	Nette\Database\IRow,
 	Nette\Database\Table\Selection;
+use Webpatser\Uuid\Uuid;
 
 /**
  * Class AbstractNeonMapper
@@ -27,6 +28,8 @@ class AbstractNeonMapper extends AbstractMapper
 	protected $neonFile;
 	/** @var Nette\Caching\IStorage */
 	protected $storage;
+	/** @var string */
+	protected $objectClass;
 
 	/** @var Nette\Caching\Cache */
 	protected $cache = null;
@@ -61,6 +64,10 @@ class AbstractNeonMapper extends AbstractMapper
 			$this->neonData = $this->neon->decode(
 				file_get_contents($this->neonFile)
 			);
+			// set id to data
+			foreach ($this->neonData as $key => $value) {
+				$this->neonData[$key]["id"] = $key;
+			}
 			$this->getCache()->save(
 				$this->neonFile,
 				$this->neonData,
@@ -70,7 +77,11 @@ class AbstractNeonMapper extends AbstractMapper
 				]
 			);
 		}
+		if ($this->neonData === null) {
+			$this->neonData = [];
+		}
 	}
+
 
 	/**
 	 * Find entities by $values (key=>value)
@@ -84,11 +95,9 @@ class AbstractNeonMapper extends AbstractMapper
 	 */
 	public function findBy(array $values, $order = null, $limit = null, $offset = null)
 	{
-		$this->encodeNeonData();
-
 		$retArray = [];
-		foreach ($this->neonData as $entity) {
-			$retArray[] = $this->dataToItem($entity);
+		foreach ($this->getDataBy($values, $order, $limit, $offset) as $entityData) {
+			$retArray[] = $this->dataToItem($entityData);
 		}
 		return $retArray;
 	}
@@ -114,42 +123,127 @@ class AbstractNeonMapper extends AbstractMapper
 	}
 
 	/**
-	 * Helper for findBy, countBy
+	 * Save entity
 	 *
-	 * @param array   $values
+	 * @param object $item
+	 *
+	 * @return boolean
+	 */
+	public function save(&$item)
+	{
+		$id = $item->id;
+		$this->neonData[$id] = $this->itemToData($item);;
+
+		$this->persist();
+		return $true;
+	}
+
+	/**
+	 * Find 1 entity by ID
+	 *
+	 * @param mixed $id
+	 *
+	 * @return object
+	 */
+	public function find($id)
+	{
+		$this->encodeNeonData();
+
+		if (isset($this->neonData[$id])) {
+			return $this->dataToItem($this->neonData[$id]);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Find first entity by $values (key=>value)
+	 *
+	 * @param array $values
+	 * @param array $order Order => column=>ASC/DESC
+	 *
+	 * @return object
+	 */
+	public function findOneBy(array $values, $order = null)
+	{
+		$items = $this->findBy($values, $order, 1);
+		if (count($items) > 0) {
+			return $items[0];
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Delete item
+	 *
+	 * @param integer $id
+	 *
+	 * @return boolean
+	 */
+	public function delete($id)
+	{
+		if (isset($this->neonData[$id])) {
+			unset($this->neonData[$id]);
+		}
+		$this->persist();
+		return true;
+	}
+
+	/**
+	 * @param array $data
+	 * @param array $values
+	 *
+	 * @return bool
+	 */
+	protected function isDataInFilter($data, array $values)
+	{
+		if (!is_array($data)) {
+			return false;
+		}
+		if (count($values) === 0) {
+			return true;
+		}
+
+		foreach ($values as $key => $value) {
+			if (is_int($key) and is_array($value)) {
+				throw new \Exception("Multiple value filter for NEON not supported");
+			} else {
+				$property = $key;
+				if (isset($data[$property])) {
+					if ($data[$property] == $value) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Helper for findBy
+	 *
+	 * @param array   $values (colum(=), column LIKE)
 	 * @param array   $order Order => column=>ASC/DESC
 	 * @param integer $limit Limit count
 	 * @param integer $offset Limit offset
 	 *
 	 * @return Nette\Database\Table\Selection
 	 */
-	protected function selectionBy(array $values, $order = null, $limit = null, $offset = null)
+	protected function getDataBy(array $values, $order = null, $limit = null, $offset = null)
 	{
-		$selection = $this->getTable();
-		// compose Where
-		foreach ($values as $key => $value) {
-			// translate property name to SQL column name
-			$keyTranslate = $this->translatePropertyToColumnSQL($key);
-			if (is_int($key) and is_array($value)) {
-				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
-				$value[0] = $this->translatePropertyToColumnSQL($value[0]);
-				call_user_func_array([$selection, "where"], $value);
-			} else {
-				$selection->where($keyTranslate, $value);
+		$this->encodeNeonData();
+
+		$valuesWithPermanentFilter = array_merge($values, $this->getPermanentlyFilter());
+		$filteredData = array_filter(
+			$this->neonData,
+			function ($itemData) use ($valuesWithPermanentFilter) {
+				return $this->isDataInFilter($itemData, $valuesWithPermanentFilter);
 			}
-		}
-		// compose permanently filter
-		foreach ($this->getPermanentlyFilter() as $key => $value) {
-			// translate property name to SQL column name
-			$keyTranslate = $this->translatePropertyToColumnSQL($key);
-			if (is_int($key) and is_array($value)) {
-				// multiple parameters in array must be first condition like (col = ? OR col = ? OR col2 = ?) and next is parameters
-				$value[0] = $this->translatePropertyToColumnSQL($value[0]);
-				call_user_func_array([$selection, "where"], $value);
-			} else {
-				$selection->where($keyTranslate, $value);
-			}
-		}
+		);
+
+
 		// compose Order
 		if ($order !== null) {
 			$orderString = "";
@@ -165,70 +259,49 @@ class AbstractNeonMapper extends AbstractMapper
 			} else {
 			}
 		}
-		// compose Limit
-		if ($limit !== null) {
-			if ($offset !== null) {
-				$selection->limit((int)$limit, (int)$offset);
-			} else {
-				$selection->limit((int)$limit);
+
+		// Limit and offset
+		if ($offset !== null or $limit !== null) {
+			if ($offset === null) {
+				$offset = 0;
 			}
-		}
-		if ($limit !== null and !$order) {
-			// is MS SQL? need order for OFFSET
-			if ($this->database->getConnection()->getSupplementalDriver()
-				instanceof Nette\Database\Drivers\SqlsrvDriver
-			) {
-				$selection->order($selection->getPrimary());
-			}
+			$filteredData = array_slice($filteredData, $offset, $limit);
 		}
 
-		return $selection;
-	}
-
-	/**
-	 * Get table object
-	 *
-	 * @return Selection
-	 */
-	protected function getTable()
-	{
-		return null;
-	}
-
-	/**
-	 * Translate property name in string to SQl column name
-	 *
-	 * @param string $string
-	 *
-	 * @return string
-	 */
-	protected function translatePropertyToColumnSQL($string)
-	{
-		return strtr($string, $this->mapItemPropertySQLNames());
-	}
-
-	/**
-	 * Get array map of item property vs SQL columns name
-	 * For overwrite
-	 *
-	 * @return array
-	 */
-	protected function mapItemPropertySQLNames()
-	{
-		return [];
+		return $filteredData;
 	}
 
 	/**
 	 * From data to item
-	 * For overwrite
 	 *
-	 * @param IRow $data
+	 * @param array $data
 	 *
 	 * @return mixed
 	 */
 	protected function dataToItem($data)
 	{
-		return iterator_to_array($data);
+		$item = new $this->objectClass;
+		foreach ($data as $property => $value) {
+			$item->$property = $value;
+		}
+		return $item;
+	}
+
+
+	/**
+	 * From item to data
+	 *
+	 * @param object $data
+	 *
+	 * @return array
+	 */
+	protected function itemToData($item)
+	{
+		$data = [];
+		foreach ($item as $property => $value) {
+			$data[$property] = $value;
+		}
+		return $data;
 	}
 
 	/**
@@ -240,7 +313,8 @@ class AbstractNeonMapper extends AbstractMapper
 	 */
 	public function countBy(array $values)
 	{
-		return $this->selectionBy($values)->count();
+		$filteredValues = $this->findBy($values);
+		return count($filteredValues);
 	}
 
 	/**
@@ -253,7 +327,32 @@ class AbstractNeonMapper extends AbstractMapper
 	 */
 	public function sumBy(array $values, $column)
 	{
-		return $this->selectionBy($values)->sum($this->translatePropertyToColumnSQL($column));
+		$filteredValues = $this->findBy($values);
+		$sum = 0.00;
+		foreach ($filteredValues as $item) {
+			$sum = $sum + (float)$item->$column;
+		}
+		return $sum;
 	}
 
+	/**
+	 * Persist changes to neon file
+	 */
+	protected function persist()
+	{
+		$saveData = [];
+		// remove id
+		foreach ($this->neonData as $key=>$value) {
+			if (isset($this->neonData[$key]["id"])) {
+				$id = $this->neonData[$key]["id"];
+				unset($value["id"]);
+			} else {
+				$id = Uuid::generate(4);
+			}
+
+			$saveData[$id] = $value;
+		}
+		$data = $this->neon->encode($this->neonData, Nette\Neon\Encoder::BLOCK);
+		file_put_contents($this->neonFile, $data);
+	}
 }

@@ -23,7 +23,8 @@
     "nette/forms": "^2.4",
     "nette/application": "^2.4",
     "latte/latte": "^2.4",
-    "nette/neon": "^2.4"
+    "nette/neon": "^2.4",
+    "webpatser/laravel-uuid": "2.0.1"
   },
   "suggest": {
     "o5/grido": "^2.1",

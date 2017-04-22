@@ -2,6 +2,7 @@
 
 namespace Mepatek\Components\UI;
 
+use Doctrine\ORM\QueryBuilder;
 use Nette,
 	Grido,
 	Grido\Grid,
@@ -12,6 +13,7 @@ use Nette,
 	Nette\Database\Table\Selection;
 use Nette\Localization\ITranslator;
 use Ublaboo\DataGrid\DataSource\ArrayDataSource;
+use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 use Ublaboo\DataGrid\DataSource\NetteDatabaseTableDataSource;
 
 /**
@@ -24,12 +26,15 @@ class GridFactory
 	/** @var ITranslator */
 	private $translator;
 
+	/** @var string */
+	private $defaultGrid;
+
 	/**
 	 * GridFactory constructor.
 	 *
 	 * @param ITranslator $translator
 	 */
-	public function __construct($translator, $defaultGrid = "Grido")
+	public function __construct($translator, $defaultGrid = "Ublaboo")
 	{
 		$this->translator = $translator;
 		$this->defaultGrid = $defaultGrid;
@@ -113,12 +118,12 @@ class GridFactory
 	/**
 	 * Create grid UI component (Ublaboo/DataGrid
 	 *
-	 * @param array|IRepository|Selection          $data
-	 * @param string                               $primaryKey
-	 * @param integer                              $perPage
-	 * @param array                                $permanentlyFilter
-	 * @param Nette\ComponentModel\IContainer|null $parent
-	 * @param string|null                          $name
+	 * @param array|QueryBuilder|IRepository|Selection $data
+	 * @param string                                   $primaryKey
+	 * @param integer                                  $perPage
+	 * @param array                                    $permanentlyFilter
+	 * @param Nette\ComponentModel\IContainer|null     $parent
+	 * @param string|null                              $name
 	 *
 	 * @return DataGrid
 	 * @throws DataGridException
@@ -134,7 +139,9 @@ class GridFactory
 
 		// set data source
 		if ($data) {
-			if ($data instanceof IRepository) {
+			if ($data instanceof QueryBuilder) {
+				$dataSource = new DoctrineDataSource($data, $primaryKey);
+			} elseif ($data instanceof IRepository) {
 				$dataSource = new Mepatek\Components\Ublaboo\DataSources\RepositorySource($data, $primaryKey);
 				$dataSource->setPermanentlyFilter($permanentlyFilter);
 			} elseif ($data instanceof Selection) {

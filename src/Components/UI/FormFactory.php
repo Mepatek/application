@@ -6,21 +6,15 @@ use Mepatek\Components\Form,
 	Mepatek\Components\FormBootstrap;
 use Nette\Localization\ITranslator;
 
+/**
+ * Class FormFactory
+ * @package Mepatek\Components\UI
+ */
 class FormFactory
 {
 
 	/** @var ITranslator */
 	private $translator;
-
-	/**
-	 * FormFactory constructor.
-	 *
-	 * @param ITranslator $translator
-	 */
-	public function __construct(ITranslator $translator)
-	{
-		$this->translator = $translator;
-	}
 
 	/**
     * Create form UI component
@@ -29,7 +23,10 @@ class FormFactory
     */
     public function create()
     {
-        $form = new Form($this->translator);
+        $form = new Form();
+		if ($this->translator) {
+			$form->setTranslator($this->translator);
+		}
 		return $form;
    }
 
@@ -42,8 +39,28 @@ class FormFactory
 	 */
 	public function createBootstrap($type=null)
 	{
-		$form = new FormBootstrap($this->translator, $type);
+		$form = new FormBootstrap($type);
+		if ($this->translator) {
+			$form->setTranslator($this->translator);
+		}
 		return $form;
 	}
+
+	/**
+	 * @return ITranslator
+	 */
+	public function getTranslator(): ITranslator
+	{
+		return $this->translator;
+	}
+
+	/**
+	 * @param ITranslator $translator
+	 */
+	public function setTranslator(ITranslator $translator)
+	{
+		$this->translator = $translator;
+	}
+
 
 }

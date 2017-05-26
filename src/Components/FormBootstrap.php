@@ -18,19 +18,19 @@ class FormBootstrap extends Form
 	/**
 	 * FormBootstrap constructor.
 	 *
-	 * @param null|ITranslator $translator
 	 * @param null|string      $type null, inline, vertical
 	 */
-	public function __construct($translator, $type = null)
+	public function __construct($type = null)
 	{
 		if ($type == "inline" or $type == "vertical") {
 			$this->type = $type;
 		}
-		parent::__construct($translator);
+		parent::__construct();
 	}
 
 	/**
 	 * Render bootstrap form
+	 * @param array ...$args
 	 */
 	public function render(...$args)
 	{

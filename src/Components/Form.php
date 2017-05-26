@@ -3,9 +3,7 @@
 namespace Mepatek\Components;
 
 use Mepatek\Components\Controls\DateTimeFormControl;
-use Nette\Localization\ITranslator,
-	Mepatek\Components\Controls\DateFormControl;
-use Nette\Utils\DateTime;
+use Mepatek\Components\Controls\DateFormControl;
 
 /**
  * Class Form
@@ -18,23 +16,19 @@ class Form extends \Nette\Application\UI\Form
 	/** @var boolean * */
 	protected $tooltips = false;
 
-
 	/**
 	 * FormBootstrap constructor.
 	 *
-	 * @param null|ITranslator $translator
 	 * @param null|string      $type null, inline, vertical
 	 */
-	public function __construct($translator, $type = null)
+	public function __construct($type = null)
 	{
-		if ($translator) {
-			$this->setTranslator($translator);
-		}
 		parent::__construct();
 	}
 
 	/**
 	 * Render form
+	 * @param array ...$args
 	 */
 	public function render(...$args)
 	{

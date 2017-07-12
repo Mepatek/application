@@ -16,23 +16,29 @@ class LanguageHelper
 	/**
 	 * LanguageFactory constructor.
 	 *
-	 * @param string $possibleLanguages comma separated list of possible languages, null = all
+	 * @param string   $possibleLanguages comma separated list of possible languages, null = all
+	 * @param IStorage $storage
 	 */
-	public function __construct($possibleLanguages, IStorage $storage)
+	public function __construct($possibleLanguages = null, IStorage $storage)
 	{
 		$this->possibleLanguages = $possibleLanguages;
 		$this->cache = new Cache($storage, "languageFactory");
 	}
 
 	/**
+	 * @param string|null $selectedLanguage Selected language
+	 *
 	 * @return array
 	 */
-	public function getSelectItems()
+	public function getSelectItems($selectedLanguage = null)
 	{
 		$selectItems = [];
 		$languages = $this->getLanguages();
 		foreach ($languages as $language) {
 			$selectItems[$language->id] = $language->name;
+		}
+		if ($selectedLanguage and !array_key_exists($selectedLanguage, $selectItems)) {
+			$selectItems[$selectedLanguage] = $selectedLanguage;
 		}
 		return $selectItems;
 	}
@@ -47,9 +53,9 @@ class LanguageHelper
 			$languages = [];
 
 			$possibleLanguages = $this->possibleLanguages ? preg_split("~,\s*~", $this->possibleLanguages) : null;
-			$langugesRows = explode("\n", self::LANGUAGE_ISO_639_1);
-			foreach ($langugesRows as $languageRow) {
-				$language = explode("\t", $languageRow);
+			$langRows = explode("\n", self::LANGUAGE_ISO_639_1);
+			foreach ($langRows as $langRow) {
+				$language = explode("\t", $langRow);
 				if ($possibleLanguages == null or in_array($language[0], $possibleLanguages)) {
 					$languages[] = new Language($language);
 				}

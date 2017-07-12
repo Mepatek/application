@@ -8,8 +8,6 @@ use Nette\Caching\IStorage;
 class LanguageHelper
 {
 
-	/** @var IStorage @inject */
-	public $storage;
 	/** @var Cache */
 	private $cache;
 	/** @var string */
@@ -20,10 +18,10 @@ class LanguageHelper
 	 *
 	 * @param string $possibleLanguages comma separated list of possible languages, null = all
 	 */
-	public function __construct($possibleLanguages = null)
+	public function __construct($possibleLanguages, IStorage $storage)
 	{
 		$this->possibleLanguages = $possibleLanguages;
-		$this->cache = new Cache($this->storage, "languageFactory");
+		$this->cache = new Cache($storage, "languageFactory");
 	}
 
 	/**
@@ -48,8 +46,8 @@ class LanguageHelper
 			"languages", function () {
 			$languages = [];
 
-			$possibleLanguages = $this->possibleLanguages ? preg_split(",\s*", $this->possibleLanguages) : null;
-			$langugesRows = explode("\n", self::LANGUAGE_ICO_639_1);
+			$possibleLanguages = $this->possibleLanguages ? preg_split("~,\s*~", $this->possibleLanguages) : null;
+			$langugesRows = explode("\n", self::LANGUAGE_ISO_639_1);
 			foreach ($langugesRows as $languageRow) {
 				$language = explode("\t", $languageRow);
 				if ($possibleLanguages == null or in_array($language[0], $possibleLanguages)) {
@@ -61,7 +59,7 @@ class LanguageHelper
 		);
 	}
 
-	const LANGUAGE_ICO_639_1 = <<< EOT
+	const LANGUAGE_ISO_639_1 = <<< EOT
 aa	afarština	Afaraf	Afar
 ab	abcházština	Аҧсуа	Abkhaz
 ae	avestánština	avesta	Avestan

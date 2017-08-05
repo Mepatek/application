@@ -49,7 +49,7 @@ class FormFactory
 	/**
 	 * @return ITranslator
 	 */
-	public function getTranslator(): ITranslator
+	public function getTranslator()
 	{
 		return $this->translator;
 	}

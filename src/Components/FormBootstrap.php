@@ -18,7 +18,7 @@ class FormBootstrap extends Form
 	/**
 	 * FormBootstrap constructor.
 	 *
-	 * @param null|string      $type null, inline, vertical
+	 * @param null|string $type null, inline, vertical
 	 */
 	public function __construct($type = null)
 	{
@@ -30,6 +30,7 @@ class FormBootstrap extends Form
 
 	/**
 	 * Render bootstrap form
+	 *
 	 * @param array ...$args
 	 */
 	public function render(...$args)
@@ -45,7 +46,9 @@ class FormBootstrap extends Form
 				$renderer = new BootstrapRenderer;
 				break;
 		}
-		$renderer->wrappers["label"]["container"] = 'div class="col-sm-2 control-label"';
+		if (!($this->type == "inline" or $this->type == "vertical")) {
+			$renderer->wrappers["label"]["container"] = 'div class="col-sm-2 control-label"';
+		}
 		$this->setRenderer($renderer);
 
 		parent::render(...$args);

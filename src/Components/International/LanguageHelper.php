@@ -65,6 +65,37 @@ class LanguageHelper
 		);
 	}
 
+	/**
+	 * @param string $isoLanguage
+	 *
+	 * @return array
+	 */
+	public function getMonths($isoLanguage)
+	{
+		$monthRows = explode("\n", self::MONTH_NAMES);
+		$months = [];
+		foreach ($monthRows as $row) {
+			list($lng, $names) = explode(";", $row);
+			$monthNames = explode(",", $names);
+			$i = 1;
+			$monthNamesKey = [];
+			foreach ($monthNames as $month) {
+				$monthNamesKey[$i++] = $month;
+			}
+			$months[$lng] = $monthNamesKey;
+		}
+		if (isset($months[$isoLanguage])) {
+			return $months[$isoLanguage];
+		} else {
+			return $months["cs"];
+		}
+
+	}
+
+	const MONTH_NAMES = <<< EOT
+cs;Leden,Únor,Březen,Duben,Květen,Červen,Červenec,Srpen,Září,Říjen,Listopad,Prosinec
+EOT;
+
 	const LANGUAGE_ISO_639_1 = <<< EOT
 aa	afarština	Afaraf	Afar
 ab	abcházština	Аҧсуа	Abkhaz

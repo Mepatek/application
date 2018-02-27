@@ -14,6 +14,8 @@ class EasyPieChart extends Control
 	protected $title = "";
 	/** @var int|float */
 	protected $percent = 0;
+	/** @var int|float */
+	protected $number = null;
 	/** @var string */
 	protected $link = null;
 
@@ -92,6 +94,22 @@ class EasyPieChart extends Control
 	public function setPercent($percent)
 	{
 		$this->percent = $percent;
+	}
+
+	/**
+	 * @return float|int
+	 */
+	public function getNumber()
+	{
+		return $this->number;
+	}
+
+	/**
+	 * @param float|int $number
+	 */
+	public function setNumber($number)
+	{
+		$this->number = $number;
 	}
 
 	/**

@@ -3,9 +3,17 @@
 
 <div class="easy-pie-chart">
 	<div class="number {$control->getClass()}" data-bar-color="{$control->getColor()}" data-percent="{$control->getPercent()}">
-		<span>{$control->getPercent()}</span>% </div>
-	<a class="title" href="{if $link}{plink $link}{else}javascript:;{/if}"> {$control->getTitle()}
+		{if $control->getNumber()!==null}
+			<span>{$control->getNumber()}</span>
+		{else}
+			<span>{$control->getPercent()}</span>%
+		{/if}
+	</div>
+	<a class="title" href="{if $link}{plink $link}{else}javascript:;{/if}">
+		{$control->getTitle()}
+		{if $link!==null}
 		<i class="icon-arrow-right"></i>
+		{/if}
 	</a>
 </div>
 <!-- END PORTLET-->
